@@ -133,20 +133,22 @@ LOGIN_URL = "/accounts/login/"  #
 # Static files
 
 STATIC_URL = "/static/"
-if DEBUG:  # development environment
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-else:  # production environment
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
-    STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-        },
-    }
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"] if DEBUG else []
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": (
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+            if DEBUG
+            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
+    },
+}
 
 # Media files
 MEDIA_URL = "/media/"
