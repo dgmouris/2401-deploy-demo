@@ -75,12 +75,8 @@ WSGI_APPLICATION = "announcements_project.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.parse(os.getenv("DATABASE_URL")),
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -134,16 +130,21 @@ LOGIN_URL = "/accounts/login/"  #
 # Static files (WhiteNoise for production)
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+# production level static files
 if not DEBUG:
     STATIC_ROOT = BASE_DIR / "staticfiles"
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": ("whitenoise.storage.CompressedStaticFilesStorage"),
+        },
+    }
 
+# Media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
-
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": ("whitenoise.storage.CompressedStaticFilesStorage"),
-    },
-}
+# Email backend (for development, using console backend)
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
