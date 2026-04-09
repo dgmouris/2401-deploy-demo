@@ -1,4 +1,3 @@
-
 from django.views.generic import ListView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -22,11 +21,12 @@ from .forms import AnnouncementForm
 #             {'announcements': announcements}
 #         )
 
+
 class AnnouncementListView(LoginRequiredMixin, ListView):
     model = Announcement
-    template_name = 'announcements/announcement_list.html'
-    context_object_name = 'announcements'
-    ordering = ['-created_at']
+    template_name = "announcements/announcement_list.html"
+    context_object_name = "announcements"
+    ordering = ["-created_at"]
 
 
 # Change to generic class.
@@ -47,11 +47,12 @@ class AnnouncementListView(LoginRequiredMixin, ListView):
 #             return redirect('announcement_list')
 #         return render(request, self.template_name, {'form': form})
 
-class CreateAnnouncementView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
-    template_name = 'announcements/create_announcement.html'
+
+class CreateAnnouncementView(LoginRequiredMixin, IsTeacherRoleMixin, FormView):
+    template_name = "announcements/create_announcement.html"
     form_class = AnnouncementForm
-    success_url = '/announcements/'
-    permission_required = 'announcements.add_announcement'
+    success_url = "/announcements/"
+    # permission_required = 'announcements.add_announcement'
 
     def form_valid(self, form):
         announcement = form.save(commit=False)
