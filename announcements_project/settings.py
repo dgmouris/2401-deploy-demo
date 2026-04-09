@@ -133,11 +133,11 @@ LOGIN_URL = "/accounts/login/"  #
 
 # Static files (WhiteNoise for production)
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 if not DEBUG:
     STATIC_ROOT = BASE_DIR / "staticfiles"
 
-if DEBUG:
-    STATICFILES_DIRS = [BASE_DIR / "static"]
+
 
 STORAGES = {
     "default": {
