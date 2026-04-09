@@ -133,28 +133,14 @@ LOGIN_URL = "/accounts/login/"  #
 
 # Static files (WhiteNoise for production)
 STATIC_URL = "/static/"
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / "staticfiles"
 
 if DEBUG:
     STATICFILES_DIRS = [BASE_DIR / "static"]
-else:
-    STATIC_ROOT = os.getenv("STATIC_ROOT", BASE_DIR / "staticfiles")
 
 STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
     "staticfiles": {
-        "BACKEND": (
-            "django.contrib.staticfiles.storage.StaticFilesStorage"
-            if DEBUG
-            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
-        ),
+        "BACKEND": ("whitenoise.storage.CompressedStaticFilesStorage"),
     },
 }
-
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-# Email backend (for development, using console backend)
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
